@@ -39,12 +39,12 @@ public class BookController {
 		return bookService.findAllBooks();
 	}
 	
-	@GetMapping("/{bookName")
+	@GetMapping("/{bookName}")
 	public List<Book> getBookByName(@Valid @PathVariable String bookName){
 		return bookService.findBookByName(bookName);
 	}
 	
-	@GetMapping("/{bookISBN}")
+	/*@GetMapping("/{bookISBN}")
 	public ResponseEntity<Book> getBookByISBN(@Valid @PathVariable String bookISBN) {
 		Optional<Book> foundBook = bookService.findBookByISBN(bookISBN);
 		
@@ -53,7 +53,7 @@ public class BookController {
 		}
 		
 		return ResponseEntity.ok(foundBook.get());
-	}
+	}*/
 	
 	@PutMapping("/{bookISBN}")
 	public ResponseEntity<Book> putBook(@Valid @RequestBody Book newBook, @PathVariable String bookISBN){

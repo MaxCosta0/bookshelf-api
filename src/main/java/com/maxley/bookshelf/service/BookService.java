@@ -1,5 +1,6 @@
 package com.maxley.bookshelf.service;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +13,9 @@ import com.maxley.bookshelf.exception.DomainException;
 import com.maxley.bookshelf.repository.BookRepository;
 
 @Service
-public class BookService {
+public class BookService implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	private BookRepository bookRepository;
@@ -21,17 +24,17 @@ public class BookService {
 	private AuthorService authorService;
 	
 	public Book saveBook(Book book) {
-		Optional<Book> foundBook = bookRepository.findByISBN(book.getIsbn());
+		Optional<Book> foundBook = bookRepository.findByisbn(book.getIsbn());
 		
 		if(foundBook.isPresent() && !book.equals(foundBook.get())) {
-			throw new DomainException("This book is already registerd!");
+			throw new DomainException("This book has already been registerd!");
 		}
 		
-		for(Author author: book.getAuthors()) {
-			authorService.saveAuthor(author);
-		}
+		Author authorSaved = authorService.saveAuthor(book.getAuthor());
 		
-		return bookRepository.save(book);
+		Book newBook = new Book(null, book.getName(), book.getIsbn(), authorSaved);
+		
+		return bookRepository.save(newBook);
 	}
 	
 	public List<Book> findBookByName(String name){
@@ -43,7 +46,7 @@ public class BookService {
 	}
 	
 	public Optional<Book> findBookByISBN(String isbn) {
-		return bookRepository.findByISBN(isbn);
+		return bookRepository.findByisbn(isbn);
 	}
 	
 	public Boolean deleteBook(Long id) {

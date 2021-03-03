@@ -1,5 +1,6 @@
 package com.maxley.bookshelf.service;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,15 +11,17 @@ import com.maxley.bookshelf.domain.Author;
 import com.maxley.bookshelf.repository.AuthorRepository;
 
 @Service
-public class AuthorService {
+public class AuthorService implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Autowired
 	private AuthorRepository authorRepository;
 	
 	public Author saveAuthor(Author author) {
 		Optional<Author> foundAuthor = authorRepository.findByName(author.getName());
 		
-		if(foundAuthor.isPresent() && !author.equals(foundAuthor.get()) ) {
+		if(foundAuthor.isPresent() && author.getName().equals(foundAuthor.get().getName()) ) {
 			return foundAuthor.get();
 		}
 		
